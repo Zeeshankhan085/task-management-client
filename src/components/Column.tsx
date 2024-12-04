@@ -4,7 +4,7 @@ import Task from "./Task";
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
 import { useCallback, useEffect, useRef } from "react";
-import { BaseEventPayload } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
+import { ElementDragType, DropTargetEventBasePayload } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { moveTask } from '../api';
 import { useMutation, useQueryClient } from 'react-query';
 import { useBoardStore } from "../store/board";
@@ -29,15 +29,27 @@ function Column({ column }: ColumnProps) {
     },
   });
 
-  const onDrop = useCallback(({ location, self, source }: BaseEventPayload) => {
+  const onDrop = useCallback(({ location, self, source }: DropTargetEventBasePayload<ElementDragType>) => {
+    console.log(self, "self");
+    console.log({ location });
+    console.log({ source });
+
+
     const getTaskById = (taskId: string): ITask | null => {
-      return currentBoard?.columns.reduce((foundTask, col) => {
-        return foundTask || col.tasks.find(task => task._id === taskId) || null;
-      }, null);
+      if (currentBoard) {
+        for (const col of currentBoard.columns) {
+          const foundTask = col.tasks.find(task => task._id === taskId);
+          if (foundTask) {
+            return foundTask; // immediately returns the task
+          }
+        }
+      }
+      return null;
     };
-    const sourceColumnId = location.initial.dropTargets[0].data.columnId;
-    const taskId = source.data.taskId;
-    const targetColumnId = self.data.columnId;
+
+    const sourceColumnId = location.initial.dropTargets[0].data.columnId as string;
+    const taskId = source.data.taskId as string;
+    const targetColumnId = self.data.columnId as string;
 
     if (sourceColumnId && targetColumnId) {
       const findSourceColumn = currentBoard?.columns.find(col => col._id === sourceColumnId);

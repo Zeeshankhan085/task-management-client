@@ -12,7 +12,7 @@ export const saveNewColumn = async ({boardId, columns, boardName}: {boardId: str
  
 }
 
-export const moveTask = async ({boardId, sourceColumnId, targetColumnId, taskId}: {boardId: string, sourceColumnId: string, targetColumnId: string, taskId: number}) => {
+export const moveTask = async ({boardId, sourceColumnId, targetColumnId, taskId}: {boardId: string, sourceColumnId: string, targetColumnId: string, taskId: string}) => {
   const {data} = await  axiosInstance.put(`tasks/${taskId}/move`, { targetColumnId, sourceColumnId, boardId });
   return data
  }

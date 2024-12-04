@@ -54,8 +54,21 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
     setFormValue({ ...formValue, subTasks: tasks })
   }
 
-  const mutation = useMutation({
-    mutationFn: task ? editTask : createTask,
+  const editMutation = useMutation({
+    mutationFn: editTask,
+    onSuccess: () => {
+
+      // Invalidate and refetch boards after a successful mutation
+      queryClient.invalidateQueries('boards');
+      console.log('onsucess');
+      close()
+      // forceUpdate()//
+
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createTask,
     onSuccess: () => {
 
       // Invalidate and refetch boards after a successful mutation
@@ -82,10 +95,10 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
       const filteredTask = task.subTasks.filter(subTask => subTask.title)
       task.subTasks = filteredTask
       if (column && column._id) {
-        mutation.mutate({ columnId: column._id, task: task })
+        createMutation.mutate({ columnId: column._id, task: task })
       }
     } else {
-      mutation.mutate(formValue)
+      editMutation.mutate(formValue as unknown as Task)
 
     }
 

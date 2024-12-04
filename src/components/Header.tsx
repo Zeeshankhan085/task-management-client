@@ -36,7 +36,7 @@ function Header() {
         <Flex align="=center">
           <Button disabled={currentBoard?.columns.length === 0 || !currentBoard?.columns} onClick={open}>Add New Task</Button>
           <Menu shadow="md" width={200}>
-            <Menu.Target pr="0">
+            <Menu.Target>
               <Button variant="transparent"><IconDotsVertical /></Button>
             </Menu.Target>
 
