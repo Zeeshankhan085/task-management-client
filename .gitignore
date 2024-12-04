@@ -1,0 +1,42 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Vite cache
+.vite/
+
+# TypeScript output
+*.tsbuildinfo
+
+# Log files
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/editor directories and files
+.vscode/
+.idea/
+
+# Dependency directories
+jspm_packages/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# NPM package lock files
+package-lock.json
+pnpm-lock.yaml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Optional VSCode settings
+.vscode/settings.json
+
+# Test Coverage
+coverage/
