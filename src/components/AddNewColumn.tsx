@@ -1,35 +1,15 @@
-import { Card, Center, Modal, Text, Stack, Button, Grid } from '@mantine/core';
+import { Card, Center, Text, Stack, Button, Grid } from '@mantine/core';
 import { useBoardStore } from '../store/board';
 import { useState } from 'react';
-import { useDisclosure } from '@mantine/hooks';
-import EditBoard from './EditBoard';
-import { useEffect } from 'react';
-import { EditColumn, Column } from './modal';
-import { useMutation, useQueryClient } from 'react-query';
-import { saveNewColumn } from '../api'
 import EditBoardWrapper from './EditBoardWrapper';
 
 
 function AddNewColumn() {
 
-  const queryClient = useQueryClient();
 
-  const { currentBoard, setCurrentBoard, addNewColumn } = useBoardStore();
+  const { currentBoard } = useBoardStore();
 
-  const mutation = useMutation({
-    mutationFn: saveNewColumn,
-    onSuccess: () => {
-
-      // Invalidate and refetch boards after a successful mutation
-      queryClient.invalidateQueries('boards');
-      console.log('onsucess');
-
-    },
-  });
-
-  const columns = currentBoard?.columns ?? []
   const [opened, setOpened] = useState(false);
-  // useEffect(() => {
 
   return (
     <>

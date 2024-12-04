@@ -9,7 +9,7 @@ import EditBoardWrapper from './EditBoardWrapper';
 
 function Sidebar({ toggleDesktop, toggleMobile }: { toggleDesktop: () => void, toggleMobile: () => void }) {
   const [opened, setOpened] = useState(false);
-  const { data: boards = [], isLoading } = useQuery<Board[]>('boards', fetchBoards);
+  const { data: boards = [] } = useQuery<Board[]>('boards', fetchBoards);
   const { currentBoard, setCurrentBoard } = useBoardStore()
 
 

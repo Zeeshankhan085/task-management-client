@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { Board, Column } from '../components/modal';
-import zustymiddlewarets  from 'zustymiddlewarets';
 import { devtools } from 'zustand/middleware';
 
 interface BoardInterface {

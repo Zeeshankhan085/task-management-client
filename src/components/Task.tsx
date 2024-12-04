@@ -1,11 +1,10 @@
-import { Card, Text, Overlay, Modal, Button } from '@mantine/core'
+import { Card, Text, Modal } from '@mantine/core'
 import { Task as ITask, } from './modal'
 import { useDisclosure } from '@mantine/hooks';
 import TaskDetail from './TaskDetail';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { useEffect, useRef, useState } from 'react';
 // import {DragHandleButton} from '@atlaskit/pragmatic-drag-and-drop' 
-import { DragHandleButton } from '@atlaskit/pragmatic-drag-and-drop-react-accessibility/drag-handle-button';
 import NewTask from './NewTask';
 
 
@@ -15,8 +14,6 @@ function Task({ task }: { task: ITask }) {
 
   const [dragging, setDragging] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
-  const dragHandleRef = useRef<HTMLButtonElement | null>(null)
-  // const [currentTask, setCurrentTask] = useState<null | ITask>(null)
   useEffect(() => {
     if (!ref.current) {
       return
@@ -27,7 +24,6 @@ function Task({ task }: { task: ITask }) {
       getInitialData: () => ({ taskId: task._id }),
       onDragStart: () => setDragging(true),
       onDrop: () => setDragging(false),
-      // dragHandle: dragHandleRef.current!
     })
   })
 
@@ -47,13 +43,7 @@ function Task({ task }: { task: ITask }) {
           textOverflow: 'ellipsis',
           width: '200px'
         }} color='dark' onClick={open}>{task.title}</Text>
-        {/* <Overlay
-          opacity={0}
-        component='a'
-        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        target="_blank"
-        /> */}
-        {/* <DragHandleButton label="drag me" ref={dragHandleRef} /> */}
+
 
       </Card>
       <Modal centered opened={opened} onClose={close} withCloseButton={false} >
@@ -69,11 +59,3 @@ function Task({ task }: { task: ITask }) {
 }
 
 export default Task
-
-
-
-const DragHandle = () => {
-  return (
-    <div>Drag me</div>
-  )
-}

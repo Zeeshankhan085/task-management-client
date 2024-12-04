@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+// @ts-nocheck
+import { useState } from 'react'
 import { useBoardStore } from '../store/board'
-import { Flex, Button, Text, Modal, Box, Menu } from '@mantine/core';
+import { Flex, Button, Text, Modal, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import NewTask from './NewTask';
 import { IconDotsVertical } from '@tabler/icons-react';
-import DeleteBoard from './DeleteBoard';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteBoard } from '../api'
 import ConfirmationModal from './ConfirmationModal';

@@ -1,23 +1,15 @@
-import { AppShell, Button, Box, em, AppShellNavbar, ActionIcon, ScrollArea } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { AppShell, Box, ActionIcon } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Board from './components/Board';
-import { useEffect } from 'react';
-import { useBoardStore } from './store/board';
-import { getLocalStorage, storeLocalStorage } from './utils/localStorage';
-import { boardsData } from './data';
 import { IconEye } from '@tabler/icons-react'
-import { useState } from 'react';
 
 
 export default function App() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
-  const [opened, setOpened] = useState(false);
   const [desktopOpened, { toggle: toggleDesktop }] =
     useDisclosure(true);
-  const isTablet =
-    useMediaQuery('(min-width: 768px) and (max-width: 1200px)');
 
   return (
     <>

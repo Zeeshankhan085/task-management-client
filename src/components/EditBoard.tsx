@@ -1,8 +1,6 @@
 import { Title, Stack, Input, CloseButton, Text, Box, Button } from "@mantine/core"
 import { IconPlus } from '@tabler/icons-react'
-import { Column, EditColumn } from "./modal";
-import { useBoardStore } from "../store/board";
-import { useEffect } from "react";
+import { Column } from "./modal";
 
 function EditBoard({ isEdit = false, saveChanges, handleInputChange, columns, handleBoardChange, boardName, addNewColumn }: { isEdit: boolean, saveChanges: () => void, handleInputChange: (index: number, value: string) => void, columns: Column[], boardName: string, handleBoardChange: (value: string) => void, addNewColumn: () => void }) {
 

@@ -1,16 +1,13 @@
-import React, { useState } from 'react'
 import { Task, } from './modal'
-import { Group, Title, Stack, Button, Text, Box, Checkbox, Menu, Modal, FocusTrap } from '@mantine/core'
+import { Group, Title, Stack, Button, Text, Box, Checkbox, Menu, FocusTrap } from '@mantine/core'
 import { IconDotsVertical } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks';
-import NewTask from './NewTask';
 import ConfirmationModal from './ConfirmationModal';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask } from '../api'
 
 function TaskDetail({ task, openNewTaskModal }: { task: Task, openNewTaskModal: () => void, }) {
   console.log({ task });
-  const [opened, { open, close }] = useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] = useDisclosure(false);
   const queryClient = useQueryClient();
 
@@ -36,7 +33,7 @@ function TaskDetail({ task, openNewTaskModal }: { task: Task, openNewTaskModal: 
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item onClick={() => { open(); openNewTaskModal() }}>
+              <Menu.Item onClick={() => { openNewTaskModal() }}>
                 Edit Task
 
 

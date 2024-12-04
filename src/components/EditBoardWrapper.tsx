@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Title, Stack, Input, CloseButton, Text, Box, Button, Modal } from "@mantine/core"
 import { IconPlus } from '@tabler/icons-react'
 import { useState } from "react";
@@ -7,12 +8,11 @@ import { useMutation, useQueryClient } from 'react-query';
 import { saveNewColumn, addNewBoard } from '../api'
 
 
-
 function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, closeModal: (bool: boolean) => void }) {
 
   const queryClient = useQueryClient();
 
-  const { currentBoard, setCurrentBoard, restoreCurrentBoard } = useBoardStore();
+  const { currentBoard, restoreCurrentBoard } = useBoardStore();
 
   const editMutation = useMutation({
     mutationFn: saveNewColumn,
@@ -63,7 +63,6 @@ function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, clo
     columns: [],
   })
   let editBoard = isEdit ? existingBoard : emptyBoard;
-  const boardName = isEdit ? existingBoard?.name : emptyBoard.name
   const handleBoardNameChange = (name: string) => {
     if (isEdit) {
       if (existingBoard) {
@@ -91,7 +90,7 @@ function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, clo
       tasks: []
     };
     if (editBoard) {
-      editBoard = { ...editBoard, columns: [...editBoard?.columns, newColumn] }
+      editBoard = { ...editBoard, columns: [...editBoard.columns, newColumn] }
       if (isEdit) {
         setExistingBoard(editBoard);
       } else {

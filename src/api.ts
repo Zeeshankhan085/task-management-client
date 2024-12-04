@@ -23,7 +23,8 @@ export const moveTask = async ({boardId, sourceColumnId, targetColumnId, taskId}
  }
 
  export const createTask = async ({columnId, task}: { columnId: string, task: NewTask}) => {
-  const {data} = await axiosInstance.post(`/tasks`, {task, columnId})
+  const {data} = await axiosInstance.post(`/tasks`, {task, columnId});
+  return data
  }
 
  export const deleteBoard = async (boardId: string) => {

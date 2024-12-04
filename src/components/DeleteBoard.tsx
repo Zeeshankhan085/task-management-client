@@ -1,5 +1,4 @@
-import { Box, Text, Button, Group, Stack } from '@mantine/core'
-import React from 'react'
+import { Text, Button, Group, Stack } from '@mantine/core'
 import { useBoardStore } from '../store/board'
 
 
