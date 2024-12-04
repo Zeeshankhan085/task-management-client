@@ -80,7 +80,7 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
     },
   });
   const deleteSubTask = (index: number) => {
-    const tasks = formValue.subTasks.filter((task, taskIndex) => taskIndex !== index);
+    const tasks = formValue.subTasks.filter((_, taskIndex) => taskIndex !== index);
     setFormValue({ ...formValue, subTasks: tasks })
   }
 
