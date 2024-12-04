@@ -1,10 +1,9 @@
-// @ts-nocheck
 import { Stack, Text } from "@mantine/core";
 import { Column as IColumn } from "./modal";
 import Task from "./Task";
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { BaseEventPayload } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { moveTask } from '../api';
 import { useMutation, useQueryClient } from 'react-query';
@@ -20,11 +19,7 @@ function Column({ column }: ColumnProps) {
   const queryClient = useQueryClient();
   const { currentBoard } = useBoardStore();
 
-  const getTaskById = (taskId: string): ITask | null => {
-    return currentBoard?.columns.reduce((foundTask, col) => {
-      return foundTask || col.tasks.find(task => task._id === taskId) || null;
-    }, null);
-  };
+
 
   const mutation = useMutation({
     mutationFn: moveTask,
@@ -34,7 +29,12 @@ function Column({ column }: ColumnProps) {
     },
   });
 
-  const onDrop = ({ location, self, source }: BaseEventPayload) => {
+  const onDrop = useCallback(({ location, self, source }: BaseEventPayload) => {
+    const getTaskById = (taskId: string): ITask | null => {
+      return currentBoard?.columns.reduce((foundTask, col) => {
+        return foundTask || col.tasks.find(task => task._id === taskId) || null;
+      }, null);
+    };
     const sourceColumnId = location.initial.dropTargets[0].data.columnId;
     const taskId = source.data.taskId;
     const targetColumnId = self.data.columnId;
@@ -46,17 +46,17 @@ function Column({ column }: ColumnProps) {
       if (findSourceColumn && findTargetColumn) {
         const task = getTaskById(taskId as string); // Ensure task is valid or null
 
-        if (task) {
+        if (task && currentBoard && currentBoard._id) {
           findSourceColumn.tasks = findSourceColumn.tasks.filter(t => t._id !== taskId);
           findTargetColumn.tasks.push(task);
 
-          mutation.mutate({ boardId: currentBoard?._id!, taskId, sourceColumnId, targetColumnId });
+          mutation.mutate({ boardId: currentBoard._id, taskId, sourceColumnId, targetColumnId });
         } else {
           console.error("Task not found");
         }
       }
     }
-  };
+  }, [currentBoard, mutation])
 
   useEffect(() => {
     if (!ref.current) {
@@ -70,7 +70,7 @@ function Column({ column }: ColumnProps) {
       getData: () => ({ columnId: column._id }),
       getIsSticky: () => true,
     });
-  }, [column._id]);
+  }, [column._id, onDrop]);
 
   return (
     <Stack>

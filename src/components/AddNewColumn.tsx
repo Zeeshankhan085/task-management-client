@@ -29,7 +29,7 @@ function AddNewColumn() {
 
         <Center style={{ height: "calc(100vh - 200px)" }} w="100%">
           <Stack align="center">
-            <Text align="center" >This board is empty. Create a new column <br /> to get started.</Text>
+            <Text style={{ textAlign: 'center' }}>This board is empty. Create a new column <br /> to get started.</Text>
             <Button onClick={() => setOpened(true)}>Add New Column</Button>
           </Stack>
         </Center >

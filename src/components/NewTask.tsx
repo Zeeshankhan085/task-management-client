@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect, useState } from 'react'
 import { useBoardStore } from '../store/board'
 import { Stack, TextInput, Textarea, Select, Button, Text, ActionIcon } from '@mantine/core'
@@ -22,7 +21,7 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
     if (task) {
       setFormValue(task)
     }
-  }, [])
+  }, [task])
   const handleInputChange = (target: keyof typeof formValue, value: string) => {
     setFormValue({
       ...formValue,
@@ -40,7 +39,6 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
       }
     });
 
-    console.log({ tasks });
 
     setFormValue({ ...formValue, subTasks: tasks });
   }
@@ -83,7 +81,9 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
       const task = structuredClone(formValue)
       const filteredTask = task.subTasks.filter(subTask => subTask.title)
       task.subTasks = filteredTask
-      mutation.mutate({ columnId: column?._id!, task: task })
+      if (column && column._id) {
+        mutation.mutate({ columnId: column._id, task: task })
+      }
     } else {
       mutation.mutate(formValue)
 

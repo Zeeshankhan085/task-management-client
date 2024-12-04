@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from 'react'
 import { useBoardStore } from '../store/board'
 import { Flex, Button, Text, Modal, Menu } from '@mantine/core';
@@ -60,7 +59,7 @@ function Header() {
         <NewTask close={close} task={null} />
 
       </Modal>
-      <ConfirmationModal onCancel={deleteClose} onConfirm={() => mutation.mutate(currentBoard?._id!)} title='Delete this board' description={`Are you sure you want to delete ${currentBoard?.name}. This action will remove all columns and tasks and cannot be reversed`} isOpen={deleteOpened} />
+      <ConfirmationModal onCancel={deleteClose} onConfirm={() => mutation.mutate(currentBoard._id)} title='Delete this board' description={`Are you sure you want to delete ${currentBoard?.name}. This action will remove all columns and tasks and cannot be reversed`} isOpen={deleteOpened} />
       {editBoardModal && <EditBoardWrapper isEdit={true} closeModal={setEditBoardModal} />}
     </>
   )

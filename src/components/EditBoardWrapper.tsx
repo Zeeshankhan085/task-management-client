@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Title, Stack, Input, CloseButton, Text, Box, Button, Modal } from "@mantine/core"
 import { IconPlus } from '@tabler/icons-react'
 import { useState } from "react";
@@ -101,11 +100,13 @@ function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, clo
 
   const saveChanges = () => {
     const board = isEdit ? existingBoard : emptyBoard;
-    if (isEdit) {
+    if (board) {
+      if (isEdit) {
 
-      editMutation.mutate({ boardId: board?._id!, boardName: board?.name!, columns: board?.columns! })
-    } else {
-      newBoardMutation.mutate({ name: board?.name! })
+        editMutation.mutate({ boardId: board?._id, boardName: board.name, columns: board.columns })
+      } else {
+        newBoardMutation.mutate({ name: board.name })
+      }
     }
     closeModal(false)
   }
