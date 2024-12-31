@@ -50,8 +50,8 @@ function NewTask({ task = null, close }: { task: Task | null, close: () => void 
     }
   }
   const addNewTask = () => {
-    const tasks = [...formValue.subTasks, getEmptySubTask()]
-    setFormValue({ ...formValue, subTasks: tasks })
+    const subTasks = [...formValue.subTasks, getEmptySubTask()]
+    setFormValue({ ...formValue, subTasks: subTasks })
   }
 
   const editMutation = useMutation({

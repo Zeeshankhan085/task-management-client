@@ -28,8 +28,13 @@ const themeOverride = createTheme({
 });
 const theme = mergeMantineTheme(DEFAULT_THEME, themeOverride);
 
-console.log(theme.spacing, "----");
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+    },
+  },
+});
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <MantineProvider theme={theme}>

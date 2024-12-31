@@ -5,18 +5,27 @@ import { useQuery, } from 'react-query';
 import { fetchBoards } from '../api';
 import Column from './Column';
 import AddNewColumn from "./AddNewColumn"
+import { Board as BoardI } from './modal';
 // import { DragEndEvent, DragStartEvent, } from '@dnd-kit/core';
 
 function Board() {
   const { boards, currentBoard, setCurrentBoard, setBoards } = useBoardStore();
 
   const { isLoading } = useQuery(['boards'], fetchBoards, {
-    onSuccess: (fetchedBoards) => {
+    onSuccess: (fetchedBoards: BoardI[]) => {
       // Set boards in Zustand store
+
+
       setBoards(fetchedBoards);
       // Set the first board as current only if it's the initial load
       if (!boards.length && fetchedBoards.length > 0) {
         setCurrentBoard(fetchedBoards[0]);
+      }
+      if (boards.length > 0) {
+        const updatedCurrentBoard = fetchedBoards.find(board => board._id === currentBoard._id);
+        if (updatedCurrentBoard) {
+          setCurrentBoard(updatedCurrentBoard)
+        }
       }
     },
   });
