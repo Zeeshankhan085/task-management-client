@@ -6,8 +6,7 @@ import ConfirmationModal from './ConfirmationModal';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask } from '../api'
 
-function TaskDetail({ task, openNewTaskModal }: { task: Task, openNewTaskModal: () => void, }) {
-  console.log({ task });
+function TaskDetail({ task, openNewTaskModal, closeTaskModal }: { task: Task, openNewTaskModal: () => void, closeTaskModal: () => void }) {
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] = useDisclosure(false);
   const queryClient = useQueryClient();
 
@@ -18,6 +17,7 @@ function TaskDetail({ task, openNewTaskModal }: { task: Task, openNewTaskModal: 
       // Invalidate and refetch boards after a successful mutation
       queryClient.invalidateQueries('boards');
       deleteClose()
+      closeTaskModal()
 
     },
   });
@@ -62,7 +62,7 @@ function TaskDetail({ task, openNewTaskModal }: { task: Task, openNewTaskModal: 
         })}
       </Stack>
 
-      <ConfirmationModal onCancel={deleteClose} onConfirm={() => mutation.mutate(task._id)} title='Delete this task' description={`Are you sure you want to delete the '${task.title}' and its subtasks? This action cannot be reversed`} isOpen={deleteOpened} />
+      <ConfirmationModal onCancel={() => { deleteClose(); closeTaskModal() }} onConfirm={() => mutation.mutate(task._id)} title='Delete this task' description={`Are you sure you want to delete the '${task.title}' and its subtasks? This action cannot be reversed`} isOpen={deleteOpened} />
     </>
   )
 }

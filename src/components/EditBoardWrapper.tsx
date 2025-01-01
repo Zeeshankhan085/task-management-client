@@ -74,6 +74,9 @@ function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, clo
   const handleInputChange = (index: number, value: string) => {
     if (editBoard) {
       const newCols = editBoard.columns.map((col, colIndex) => colIndex === index ? { ...col, name: value } : col)
+      if (!value) {
+        newCols.splice(index, 1)
+      }
       if (isEdit && existingBoard) {
         setExistingBoard({ ...existingBoard, columns: newCols })
       } else {
@@ -99,13 +102,13 @@ function EditBoardWrapper({ isEdit = false, closeModal }: { isEdit: boolean, clo
   }
 
   const saveChanges = () => {
-    const board = isEdit ? existingBoard : emptyBoard;
-    if (board) {
+    editBoard.columns = editBoard.columns.filter(col => col.name)
+    if (editBoard) {
       if (isEdit) {
 
-        editMutation.mutate({ boardId: board?._id, boardName: board.name, columns: board.columns })
+        editMutation.mutate({ boardId: editBoard?._id, boardName: editBoard.name, columns: editBoard.columns })
       } else {
-        newBoardMutation.mutate({ name: board.name })
+        newBoardMutation.mutate({ name: editBoard.name, columns: editBoard.columns })
       }
     }
     closeModal(false)

@@ -93,6 +93,7 @@ function Column({ column }: ColumnProps) {
           textOverflow: 'ellipsis',
           width: '200px',
           fontWeight: 500,
+          fontSize: '20px'
         }}
       >
         {column.name}

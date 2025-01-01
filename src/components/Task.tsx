@@ -47,7 +47,7 @@ function Task({ task }: { task: ITask }) {
 
       </Card>
       <Modal centered opened={opened} onClose={close} withCloseButton={false} >
-        <TaskDetail openNewTaskModal={() => { openNewTaskModal(); close() }} task={task} />
+        <TaskDetail openNewTaskModal={() => { openNewTaskModal(); close() }} task={task} closeTaskModal={close} />
       </Modal>
       <Modal centered opened={newTaskModal} onClose={closeNewTaskModal} withCloseButton={false} title="Edit Task">
         <NewTask close={closeNewTaskModal} task={task} />
