@@ -72,7 +72,10 @@ function Header() {
         </Flex>
       </Flex>
       <Modal opened={opened} onClose={close} title="Add New Task">
+            {currentBoard && 
+            
         <NewTask close={close} task={null} />
+            }
       </Modal>
       <ConfirmationModal
         onCancel={deleteClose}
