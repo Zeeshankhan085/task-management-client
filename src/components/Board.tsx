@@ -1,20 +1,19 @@
-import { useBoardStore } from '../store/board';
-import { Center, Text, Grid, ScrollArea } from '@mantine/core';
+import { useBoardStore } from "../store/board";
+import { Center, Text, Grid, ScrollArea } from "@mantine/core";
 // import { useListState } from '@mantine/hooks';
-import { useQuery, } from 'react-query';
-import { fetchBoards } from '../api';
-import Column from './Column';
-import AddNewColumn from "./AddNewColumn"
-import { Board as BoardI } from './modal';
+import { useQuery } from "react-query";
+import { fetchBoards } from "../api";
+import Column from "./Column";
+import AddNewColumn from "./AddNewColumn";
+import { Board as BoardI } from "./modal";
 // import { DragEndEvent, DragStartEvent, } from '@dnd-kit/core';
 
 function Board() {
   const { boards, currentBoard, setCurrentBoard, setBoards } = useBoardStore();
 
-  const { isLoading } = useQuery(['boards'], fetchBoards, {
+  const { isLoading } = useQuery(["boards"], fetchBoards, {
     onSuccess: (fetchedBoards: BoardI[]) => {
       // Set boards in Zustand store
-
 
       setBoards(fetchedBoards);
       // Set the first board as current only if it's the initial load
@@ -22,9 +21,11 @@ function Board() {
         setCurrentBoard(fetchedBoards[0]);
       }
       if (boards.length > 0) {
-        const updatedCurrentBoard = fetchedBoards.find(board => board._id === currentBoard._id);
+        const updatedCurrentBoard = fetchedBoards.find(
+          (board) => board.id === currentBoard.id,
+        );
         if (updatedCurrentBoard) {
-          setCurrentBoard(updatedCurrentBoard)
+          setCurrentBoard(updatedCurrentBoard);
         }
       }
     },
@@ -40,9 +41,8 @@ function Board() {
 
   //   },
   // });
-  const columns = currentBoard?.columns ?? []
+  const columns = currentBoard?.columns ?? [];
   // const [activeTaskId, setActiveTaskId] = useState<null | string>(null)
-
 
   // const onDragEnd = ({ active, over }: DragEndEvent) => {
   //   console.log(active, over);
@@ -50,68 +50,70 @@ function Board() {
   //   const targetColumnId = over?.data.current?.sortable.containerId
   //   const taskId = active.id
   //   if (sourceColumnId && targetColumnId) {
-  //     const findSourceColumn = currentBoard?.columns.find(col => col._id === sourceColumnId)
-  //     const findTargetColumn = currentBoard?.columns.find(col => col._id === targetColumnId);
+  //     const findSourceColumn = currentBoard?.columns.find(col => col.id === sourceColumnId)
+  //     const findTargetColumn = currentBoard?.columns.find(col => col.id === targetColumnId);
   //     if (findSourceColumn && findTargetColumn) {
   //       const task = getTaskById(taskId as string);
-  //       findSourceColumn.tasks = findSourceColumn.tasks.filter(task => task._id !== taskId)
+  //       findSourceColumn.tasks = findSourceColumn.tasks.filter(task => task.id !== taskId)
   //       findTargetColumn.tasks.push(task)
-  //       mutation.mutate({ boardId: currentBoard?._id, taskId, sourceColumnId, targetColumnId })
+  //       mutation.mutate({ boardId: currentBoard?.id, taskId, sourceColumnId, targetColumnId })
   //     }
   //   }
 
   // };
 
   // const [state, handlers] = useListState(columns);
-  if (isLoading) return <Center mih="100%"><Text>Loading...</Text></Center>;
+  if (isLoading)
+    return (
+      <Center mih="100%">
+        <Text>Loading...</Text>
+      </Center>
+    );
   // const getTaskById = (taskId: string) => {
   //   return currentBoard?.columns.reduce((foundTask, col) => {
-  //     return foundTask || col.tasks.find(task => task._id === taskId);
+  //     return foundTask || col.tasks.find(task => task.id === taskId);
   //   }, null);
   // };
-
 
   // const onDragStart = ({ active }: DragStartEvent) => {
   //   setActiveTaskId(active.id as string)
   // }
   // const task = activeTaskId ? getTaskById(activeTaskId) : null;
 
-
   return (
     <>
       <ScrollArea
         scrollbars="x"
         type="never"
-
         styles={{
           root: {
             maxWidth: "100%", // Restrict to parent container
-            overflowX: 'auto',
+            overflowX: "auto",
           },
           viewport: {
-            width: '100%',     // Prevent viewport from exceeding container
-            padding: 0,        // Remove padding on viewport
+            width: "100%", // Prevent viewport from exceeding container
+            padding: 0, // Remove padding on viewport
           },
         }}
       >
         <Grid
           styles={{
             inner: {
-              display: 'flex',
-              flexWrap: 'nowrap',       // Prevent wrapping
+              display: "flex",
+              flexWrap: "nowrap", // Prevent wrapping
               // width: 'fit-content',    // Match content size
             },
           }}
-        // h="100%"
+          // h="100%"
         >
           {columns
             .filter((col) => col.name)
             .map((column) => (
               <Grid.Col
-                key={column._id}
+                key={column.id}
                 span={{ base: 4, md: 3, lg: 2 }}
                 style={{
-                  flex: '0 0 auto',
+                  flex: "0 0 auto",
                 }}
               >
                 <Column column={column} />
@@ -120,15 +122,8 @@ function Board() {
           <AddNewColumn />
         </Grid>
       </ScrollArea>
-
-
-
-
     </>
   );
 }
 
-export default Board
-
-
-
+export default Board;

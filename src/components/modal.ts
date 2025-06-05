@@ -1,4 +1,5 @@
 export interface Subtask {
+  readonly id?: string;
   title: string;
   isCompleted: boolean;
 }
@@ -8,26 +9,26 @@ export interface Task {
   description: string;
   status: string;
   subTasks: Subtask[];
-  _id: string;
+  id: string;
 }
 
-export type NewTask = Omit<Task, '_id'>
+export type NewTask = Omit<Task, "id">;
 
 export interface Column {
-  readonly _id?: string;
+  readonly id?: string;
   name: string;
   tasks: Task[];
 }
 
-export type EditColumn  = Omit<Column, 'tasks'>
+export type EditColumn = Omit<Column, "tasks">;
 
 export interface Board {
   name: string;
- readonly _id?: string,
+  readonly id?: string;
   columns: Column[];
 }
 
 export interface NewBoard {
   name: string;
-  columns?: Column[]
+  columns?: Column[];
 }

@@ -1,8 +1,14 @@
-import React from 'react'
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-function SortableTask({ children, id }: { children: React.ReactNode, id: string }) {
+function SortableTask({
+  children,
+  id,
+}: {
+  children: React.ReactNode;
+  id: string;
+}) {
   const {
     attributes,
     listeners,
@@ -20,7 +26,7 @@ function SortableTask({ children, id }: { children: React.ReactNode, id: string 
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {children}
     </div>
-  )
+  );
 }
 
-export default SortableTask
+export default SortableTask;
