@@ -12,25 +12,24 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.2.3",
-    "@atlaskit/pragmatic-drag-and-drop-react-accessibility": "^1.1.10",
+    "@atlaskit/pragmatic-drag-and-drop-react-accessibility": "^2.0.5",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
-    "@headlessui/react": "^2.1.2",
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
     "@tabler/icons-react": "^3.11.0",
     "@tanstack/react-query": "^5.51.15",
     "axios": "^1.7.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-query": "^3.39.3",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.15.0",
-    "@typescript-eslint/parser": "^7.15.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "7.17.0",
+    "@typescript-eslint/parser": "7.17.0",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.5",
@@ -38,7 +37,8 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "prettier": "^3.5.3",
-    "typescript": "^5.2.2",
+    "typescript": "^5.8.3",
     "vite": "^5.3.4"
-  }
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }
