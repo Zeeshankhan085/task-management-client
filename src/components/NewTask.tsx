@@ -92,7 +92,9 @@ function NewTask({ columnId, task = null, close }: NewTaskProps) {
     clonedTask.subTasks = clonedTask.subTasks.filter((s) => s.title.trim());
 
     if (!task) {
-      const newColId = currentBoard.columns.find(col => col.name === formValue.status).id;
+      const newColId = currentBoard.columns.find(
+        (col) => col.name === formValue.status,
+      ).id;
       createMutation.mutate({
         boardId: currentBoard.id,
         columnId: newColId,
