@@ -24,6 +24,7 @@ function EditBoardWrapper({
 }) {
   const queryClient = useQueryClient();
   const [deletedColumnIds, setDeletedColumnIds] = useState<string[]>([]);
+console.log('');
 
   const { currentBoard, restoreCurrentBoard, setCurrentBoard } =
     useBoardStore();
