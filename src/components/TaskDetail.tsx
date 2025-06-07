@@ -31,7 +31,7 @@ function TaskDetail({
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
   const queryClient = useQueryClient();
-  const { currentboardId } = useBoardStore();
+  const { currentBoardId } = useBoardStore();
 
   const mutation = useMutation({
     mutationFn: deleteTask,
@@ -90,7 +90,11 @@ function TaskDetail({
           closeTaskModal();
         }}
         onConfirm={() =>
-          mutation.mutate({ currentboardId, columnId, taskId: task.id })
+          mutation.mutate({
+            boardId: currentBoardId,
+            columnId,
+            taskId: task.id,
+          })
         }
         title="Delete this task"
         description={`Are you sure you want to delete the '${task.title}' and its subtasks? This action cannot be reversed`}
