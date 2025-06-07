@@ -31,12 +31,11 @@ function TaskDetail({
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
   const queryClient = useQueryClient();
-  const { id: boardId } = useBoardStore((state) => state.currentBoard);
+  const { currentboardId } = useBoardStore();
 
   const mutation = useMutation({
     mutationFn: deleteTask,
     onSuccess: () => {
-      // Invalidate and refetch boards after a successful mutation
       queryClient.invalidateQueries("boards");
       deleteClose();
       closeTaskModal();
@@ -91,7 +90,7 @@ function TaskDetail({
           closeTaskModal();
         }}
         onConfirm={() =>
-          mutation.mutate({ boardId, columnId, taskId: task.id })
+          mutation.mutate({ currentboardId, columnId, taskId: task.id })
         }
         title="Delete this task"
         description={`Are you sure you want to delete the '${task.title}' and its subtasks? This action cannot be reversed`}

@@ -3,11 +3,12 @@ import { Board } from "../components/modal";
 
 interface BoardInterface {
   boards: Board[];
-  setCurrentBoardid: (id: string) => void;
+  setCurrentBoardId: (id: string) => void;
   currentBoardId: null | string;
   setBoards: (boards: Board[]) => void;
   dataLoaded: boolean;
   currentBoard: () => Board | undefined;
+  updateBoard: (board: Board) => void;
 }
 
 export const useBoardStore = create<BoardInterface>()((set, get) => ({
@@ -24,21 +25,12 @@ export const useBoardStore = create<BoardInterface>()((set, get) => ({
   setCurrentBoardId(id: string) {
     set({ currentBoardId: id });
   },
-  // addNewColumn: () => {
-  //   set((state) => {
-  //     if (!state.currentBoard) return state;
-
-  //     const newColumn: Column = {
-  //       name: "",
-  //       tasks: [],
-  //     };
-
-  //     return {
-  //       currentBoard: {
-  //         ...state.currentBoard,
-  //         columns: [...state.currentBoard.columns, newColumn],
-  //       },
-  //     };
-  //   });
-  // },
+  updateBoard: (updatedBoard: Board) =>
+    set((state) => ({
+      boards: state.boards.map((board) =>
+        board.id === updatedBoard.id
+          ? { ...updatedBoard, columns: [...updatedBoard.columns] }
+          : board,
+      ),
+    })),
 }));

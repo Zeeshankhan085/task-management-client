@@ -79,9 +79,7 @@ function Header() {
         description={`Are you sure you want to delete ${current?.name}. This action will remove all columns and tasks and cannot be reversed`}
         isOpen={deleteOpened}
       />
-      {editBoardModal && (
-        <EditBoardWrapper isEdit={true} closeModal={setEditBoardModal} />
-      )}
+      {editBoardModal && <EditBoardWrapper closeModal={setEditBoardModal} />}
     </>
   );
 }

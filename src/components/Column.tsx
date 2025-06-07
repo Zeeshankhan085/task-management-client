@@ -20,12 +20,11 @@ interface ColumnProps {
 function Column({ column }: ColumnProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
-  const { currentBoard, setCurrentBoard } = useBoardStore();
-
+  const { currentBoard, updateBoard, currentBoardId } = useBoardStore();
+  const current = currentBoard();
   const mutation = useMutation({
     mutationFn: moveTask,
     onSuccess: () => {
-      // Invalidate and refetch boards after a successful mutation
       queryClient.invalidateQueries("boards");
     },
   });
@@ -36,13 +35,9 @@ function Column({ column }: ColumnProps) {
       self,
       source,
     }: DropTargetEventBasePayload<ElementDragType>) => {
-      console.log(self, "self");
-      console.log({ location });
-      console.log({ source });
-
       const getTaskById = (taskId: string): ITask | null => {
-        if (currentBoard) {
-          for (const col of currentBoard.columns) {
+        if (current) {
+          for (const col of current.columns) {
             const foundTask = col.tasks.find((task) => task.id === taskId);
             if (foundTask) {
               return foundTask;
@@ -58,29 +53,28 @@ function Column({ column }: ColumnProps) {
       const targetColumnId = self.data.columnId as string;
 
       if (sourceColumnId && targetColumnId) {
-        const findSourceColumn = currentBoard?.columns.find(
+        const findSourceColumn = current?.columns.find(
           (col) => col.id === sourceColumnId,
         );
-        const findTargetColumn = currentBoard?.columns.find(
+        const findTargetColumn = current?.columns.find(
           (col) => col.id === targetColumnId,
         );
 
         if (findSourceColumn && findTargetColumn) {
           const task = getTaskById(taskId as string); // Ensure task is valid or null
 
-          if (task && currentBoard && currentBoard.id) {
+          if (task && current && currentBoardId) {
             findSourceColumn.tasks = findSourceColumn.tasks.filter(
               (t) => t.id !== taskId,
             );
             findTargetColumn.tasks.push(task);
-            setCurrentBoard({
-              ...currentBoard,
-              columns: [...currentBoard.columns],
+            updateBoard({
+              ...current,
+              columns: [...current.columns],
             });
-            console.log("hiii------------S");
 
             mutation.mutate({
-              boardId: currentBoard.id,
+              boardId: currentBoardId,
               taskId,
               sourceColumnId,
               targetColumnId,
@@ -91,7 +85,7 @@ function Column({ column }: ColumnProps) {
         }
       }
     },
-    [currentBoard, mutation, setCurrentBoard],
+    [current, mutation, updateBoard, currentBoardId],
   );
 
   useEffect(() => {
