@@ -1,55 +1,44 @@
 import { create } from "zustand";
-import { Board, Column } from "../components/modal";
-import { devtools } from "zustand/middleware";
+import { Board } from "../components/modal";
 
 interface BoardInterface {
-  currentBoard: Board | null;
   boards: Board[];
-  setCurrentBoard: (currentBoard: Board) => void;
+  setCurrentBoardid: (id: string) => void;
+  currentBoardId: null | string;
   setBoards: (boards: Board[]) => void;
-  addNewColumn: () => void;
   dataLoaded: boolean;
-  onDataLoaded: (value: boolean) => void;
-  restoreCurrentBoard: (boards: Board[]) => void;
+  currentBoard: () => Board | undefined;
 }
 
-export const useBoardStore = create<BoardInterface>()(
-  devtools((set) => ({
-    currentBoard: null,
-    dataLoaded: false,
-    boards: [],
-    setBoards(boards: Board[]) {
-      set({ boards: boards });
-    },
-    setCurrentBoard(currentBoard: Board) {
-      set({ currentBoard: currentBoard });
-    },
-    restoreCurrentBoard(boards: Board[]) {
-      set((state) => ({
-        currentBoard:
-          boards.find((board) => board.id === state.currentBoard?.id) ||
-          boards[0],
-      }));
-    },
-    addNewColumn: () => {
-      set((state) => {
-        if (!state.currentBoard) return state;
+export const useBoardStore = create<BoardInterface>()((set, get) => ({
+  currentBoardId: null,
+  dataLoaded: false,
+  boards: [],
+  setBoards(boards: Board[]) {
+    set({ boards: boards });
+  },
+  currentBoard: () => {
+    const { boards, currentBoardId } = get();
+    return boards.find((board) => board.id === currentBoardId);
+  },
+  setCurrentBoardId(id: string) {
+    set({ currentBoardId: id });
+  },
+  // addNewColumn: () => {
+  //   set((state) => {
+  //     if (!state.currentBoard) return state;
 
-        const newColumn: Column = {
-          name: "",
-          tasks: [],
-        };
+  //     const newColumn: Column = {
+  //       name: "",
+  //       tasks: [],
+  //     };
 
-        return {
-          currentBoard: {
-            ...state.currentBoard,
-            columns: [...state.currentBoard.columns, newColumn],
-          },
-        };
-      });
-    },
-    onDataLoaded(value: boolean) {
-      set({ dataLoaded: value });
-    },
-  })),
-);
+  //     return {
+  //       currentBoard: {
+  //         ...state.currentBoard,
+  //         columns: [...state.currentBoard.columns, newColumn],
+  //       },
+  //     };
+  //   });
+  // },
+}));

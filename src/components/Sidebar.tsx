@@ -20,10 +20,10 @@ function Sidebar({
 }) {
   const [opened, setOpened] = useState(false);
   const { data: boards = [] } = useQuery<Board[]>("boards", fetchBoards);
-  const { currentBoard, setCurrentBoard } = useBoardStore();
-
-  const switchBoard = (board: Board) => {
-    setCurrentBoard(board);
+  const { setCurrentBoardId, currentBoardId } = useBoardStore();
+  // const current =currentBoard();
+  const switchBoard = (boardId: string) => {
+    setCurrentBoardId(boardId);
   };
   return (
     <Box pos="relative" h="100%">
@@ -38,8 +38,8 @@ function Sidebar({
         return (
           <NavLink
             key={board.id}
-            active={board?.id === currentBoard?.id}
-            onClick={() => switchBoard(board)}
+            active={board?.id === currentBoardId}
+            onClick={() => switchBoard(board.id)}
             leftSection={<IconLayoutBoardSplit size={20} />}
             label={board.name}
           />
@@ -54,7 +54,7 @@ function Sidebar({
         <IconPlus size={16} />
         Create New Board
       </Button>
-      {opened && <EditBoardWrapper closeModal={setOpened} isEdit={false} />}
+      {opened && <EditBoardWrapper isNew={true} closeModal={setOpened} />}
       <Flex
         visibleFrom="md"
         align="center"

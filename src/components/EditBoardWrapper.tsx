@@ -15,24 +15,36 @@ import { useBoardStore } from "../store/board";
 import { useMutation, useQueryClient } from "react-query";
 import { addNewBoard, updateBoard } from "../api";
 
+const emptyCurrentBoard = (): Board => {
+  return {
+    name: "",
+    columns: [],
+  };
+};
+
 function EditBoardWrapper({
-  isEdit = false,
+  isNew = false,
   closeModal,
 }: {
-  isEdit: boolean;
+  isNew?: boolean;
   closeModal: (bool: boolean) => void;
 }) {
   const queryClient = useQueryClient();
   const [deletedColumnIds, setDeletedColumnIds] = useState<string[]>([]);
-  console.log("");
-
-  const { currentBoard, restoreCurrentBoard, setCurrentBoard } =
-    useBoardStore();
+  const [processing, setProcessing] = useState(false);
+  const { currentBoard, setCurrentBoardId } = useBoardStore();
+  const current = currentBoard();
+  const [formBoard, setFormBoard] = useState(
+    isNew
+      ? emptyCurrentBoard()
+      : (structuredClone(current) ?? emptyCurrentBoard()),
+  );
+  const isEdit = !!formBoard?.id;
   const deleteColumn = (index: number, columnId: string) => {
-    const updatedColumns = currentBoard?.columns.filter(
+    const updatedColumns = formBoard?.columns.filter(
       (_, colIndex) => colIndex !== index,
     );
-    setCurrentBoard({ ...currentBoard, columns: updatedColumns || [] });
+    setFormBoard({ ...formBoard, columns: updatedColumns || [] });
     setDeletedColumnIds([...deletedColumnIds, columnId]);
   };
   const editMutation = useMutation({
@@ -44,17 +56,11 @@ function EditBoardWrapper({
       board: Board & { deletedColumnIds: string[] };
     }) => updateBoard(boardId, board),
     onSuccess: () => {
-      queryClient
-        .invalidateQueries(["boards"], {
-          refetchActive: true,
-          exact: true,
-        })
-        .then(() => {
-          const updatedBoards = queryClient.getQueryData(["boards"]) as Board[];
-          if (updatedBoards) {
-            restoreCurrentBoard(updatedBoards);
-          }
-        });
+      queryClient.invalidateQueries(["boards"], {
+        refetchActive: true,
+        exact: true,
+      });
+      setProcessing(false);
     },
   });
 
@@ -62,42 +68,21 @@ function EditBoardWrapper({
     mutationFn: addNewBoard,
     onSuccess: (data: Board) => {
       queryClient.invalidateQueries(["boards"]);
-      setCurrentBoard(data);
+      setProcessing(false);
+      setCurrentBoardId(data.id);
     },
   });
 
-  const [existingBoard, setExistingBoard] = useState(
-    structuredClone(currentBoard),
-  );
-
-  const [emptyBoard, setEmptyBoard] = useState<Board>({
-    name: "",
-    columns: [],
-  });
-  let editBoard = isEdit ? existingBoard : emptyBoard;
   const handleBoardNameChange = (name: string) => {
-    if (isEdit) {
-      if (existingBoard) {
-        setExistingBoard({ ...existingBoard, name: name });
-      }
-    } else {
-      setEmptyBoard({ ...emptyBoard, name });
-    }
+    setFormBoard({ ...formBoard, name: name });
   };
   const handleInputChange = (index: number, value: string) => {
-    if (editBoard) {
-      const newCols = editBoard.columns.map((col, colIndex) =>
-        colIndex === index ? { ...col, name: value } : col,
-      );
-      if (!value) {
-        newCols.splice(index, 1);
-      }
-      if (isEdit && existingBoard) {
-        setExistingBoard({ ...existingBoard, columns: newCols });
-      } else {
-        setEmptyBoard({ ...editBoard, columns: newCols });
-      }
-    }
+    console.log(index, value);
+
+    const updatedColumns = formBoard.columns.map((col, colIndex) => {
+      return colIndex === index ? { ...col, name: value } : col;
+    });
+    setFormBoard({ ...formBoard, columns: updatedColumns });
   };
 
   const addNewColumnCurrent = () => {
@@ -105,30 +90,22 @@ function EditBoardWrapper({
       name: "",
       tasks: [],
     };
-    if (editBoard) {
-      editBoard = { ...editBoard, columns: [...editBoard.columns, newColumn] };
-      if (isEdit) {
-        setExistingBoard(editBoard);
-      } else {
-        setEmptyBoard(editBoard);
-      }
-    }
+    setFormBoard({ ...formBoard, columns: [...formBoard.columns, newColumn] });
   };
 
   const saveChanges = () => {
-    editBoard.columns = editBoard.columns.filter((col) => col.name);
-    if (editBoard) {
-      if (isEdit) {
-        editMutation.mutate({
-          boardId: editBoard?.id,
-          board: { ...editBoard, deletedColumnIds: deletedColumnIds },
-        });
-      } else {
-        newBoardMutation.mutate({
-          name: editBoard.name,
-          columns: editBoard.columns,
-        });
-      }
+    setProcessing(true);
+    formBoard.columns = formBoard?.columns.filter((col) => col.name) ?? [];
+    if (isEdit) {
+      editMutation.mutate({
+        boardId: formBoard?.id,
+        board: { ...formBoard, deletedColumnIds: deletedColumnIds },
+      });
+    } else {
+      newBoardMutation.mutate({
+        name: formBoard.name,
+        columns: formBoard.columns,
+      });
     }
     closeModal(false);
   };
@@ -139,7 +116,7 @@ function EditBoardWrapper({
         <Box mt="md">
           <Input.Wrapper description="Board Name">
             <Input
-              value={isEdit ? existingBoard?.name : emptyBoard.name}
+              value={formBoard.name}
               onChange={(e) => handleBoardNameChange(e.target.value)}
             />
           </Input.Wrapper>
@@ -149,7 +126,7 @@ function EditBoardWrapper({
         </Text>
         <Stack mt="lg" gap="sm">
           {" "}
-          {editBoard?.columns?.map((column, index) => {
+          {formBoard.columns?.map((column, index) => {
             return (
               <Input
                 value={column.name}
@@ -174,8 +151,16 @@ function EditBoardWrapper({
           >
             Add New Column
           </Button>
-          {isEdit && <Button onClick={saveChanges}>Save Changes</Button>}
-          {!isEdit && <Button onClick={saveChanges}>Create New Board</Button>}
+          {isEdit && (
+            <Button loading={processing} onClick={saveChanges}>
+              Save Changes
+            </Button>
+          )}
+          {!isEdit && (
+            <Button loading={processing} onClick={saveChanges}>
+              Create New Board
+            </Button>
+          )}
         </Stack>
       </div>
     </Modal>

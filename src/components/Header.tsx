@@ -13,8 +13,8 @@ import { Board } from "./modal";
 function Header() {
   const queryClient = useQueryClient();
 
-  const currentBoard = useBoardStore((state) => state.currentBoard);
-  const setCurrentBoard = useBoardStore((state) => state.setCurrentBoard);
+  const { currentBoard, setCurrentBoardId } = useBoardStore();
+  const current = currentBoard();
   const [opened, { open, close }] = useDisclosure(false);
 
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
@@ -32,7 +32,7 @@ function Header() {
         .then(() => {
           const updatedBoards = queryClient.getQueryData(["boards"]) as Board[];
           if (updatedBoards) {
-            setCurrentBoard(updatedBoards[0]);
+            setCurrentBoardId(updatedBoards[0].id);
           }
         });
       deleteClose();
@@ -42,13 +42,11 @@ function Header() {
   return (
     <>
       <Flex p="sm" justify="space-between">
-        <Text>{currentBoard?.name}</Text>
+        <Text>{current?.name}</Text>
         <Flex align="=center">
           <Button
             size="xs"
-            disabled={
-              currentBoard?.columns.length === 0 || !currentBoard?.columns
-            }
+            disabled={current?.columns.length === 0 || !current?.columns}
             onClick={open}
           >
             Add New Task
@@ -72,16 +70,13 @@ function Header() {
         </Flex>
       </Flex>
       <Modal opened={opened} onClose={close} title="Add New Task">
-            {currentBoard && 
-            
-        <NewTask close={close} task={null} />
-            }
+        {current && <NewTask close={close} task={null} />}
       </Modal>
       <ConfirmationModal
         onCancel={deleteClose}
-        onConfirm={() => mutation.mutate(currentBoard.id)}
+        onConfirm={() => mutation.mutate(current.id)}
         title="Delete this board"
-        description={`Are you sure you want to delete ${currentBoard?.name}. This action will remove all columns and tasks and cannot be reversed`}
+        description={`Are you sure you want to delete ${current?.name}. This action will remove all columns and tasks and cannot be reversed`}
         isOpen={deleteOpened}
       />
       {editBoardModal && (

@@ -10,7 +10,7 @@ export async function updateBoard(
   boardId: string,
   board: Board & { deletedColumnIds?: string[] },
 ) {
-  const { data } = await axiosInstance.put(`/boards/${boardId}`, board);
+  const { data } = await axiosInstance.put(`/boards/${boardId}/`, board);
   return data;
 }
 
@@ -23,7 +23,7 @@ export const saveNewColumn = async ({
   boardName: string;
   columns: EditColumn[];
 }) => {
-  const { data } = await axiosInstance.post(`/boards/${boardId}/columns`, {
+  const { data } = await axiosInstance.post(`/boards/${boardId}/columns/`, {
     columns,
     boardName,
   });

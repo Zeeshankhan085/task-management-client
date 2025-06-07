@@ -5,13 +5,13 @@ import EditBoardWrapper from "./EditBoardWrapper";
 
 function AddNewColumn() {
   const { currentBoard } = useBoardStore();
+  const current = currentBoard();
 
   const [opened, setOpened] = useState(false);
 
   return (
     <>
-      {currentBoard &&
-      currentBoard.columns.filter((col) => col.name).length > 0 ? (
+      {current && current.columns.filter((col) => col.name).length > 0 ? (
         <Grid.Col span={{ base: 4, md: 3, xl: 2 }}>
           {" "}
           <Card shadow="sm" padding="lg" radius="md" withBorder h="60%">
@@ -35,7 +35,7 @@ function AddNewColumn() {
         </Center>
       )}
 
-      {opened && <EditBoardWrapper isEdit={true} closeModal={setOpened} />}
+      {opened && <EditBoardWrapper closeModal={setOpened} />}
     </>
   );
 }

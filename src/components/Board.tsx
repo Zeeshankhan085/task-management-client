@@ -9,76 +9,35 @@ import { Board as BoardI } from "./modal";
 // import { DragEndEvent, DragStartEvent, } from '@dnd-kit/core';
 
 function Board() {
-  const { boards, currentBoard, setCurrentBoard, setBoards } = useBoardStore();
-
+  const { currentBoard, setCurrentBoardId, setBoards } = useBoardStore();
+  const current = currentBoard();
   const { isLoading } = useQuery(["boards"], fetchBoards, {
     onSuccess: (fetchedBoards: BoardI[]) => {
       // Set boards in Zustand store
 
       setBoards(fetchedBoards);
       // Set the first board as current only if it's the initial load
-      if (!boards.length && fetchedBoards.length > 0) {
-        setCurrentBoard(fetchedBoards[0]);
+      const current = currentBoard();
+      if (!current && fetchedBoards.length > 0) {
+        setCurrentBoardId(fetchedBoards[0].id);
       }
-      if (boards.length > 0) {
-        const updatedCurrentBoard = fetchedBoards.find(
-          (board) => board.id === currentBoard.id,
-        );
-        if (updatedCurrentBoard) {
-          setCurrentBoard(updatedCurrentBoard);
+      if (current) {
+        const updated = fetchedBoards.find((board) => board.id === current.id);
+        if (updated) {
+          setCurrentBoardId(updated.id);
         }
       }
     },
   });
 
-  // const queryClient = useQueryClient()
-  // const mutation = useMutation({
-  //   mutationFn: moveTask,
-  //   onSuccess: () => {
+  const columns = current?.columns ?? [];
 
-  //     // Invalidate and refetch boards after a successful mutation
-  //     queryClient.invalidateQueries('boards');
-
-  //   },
-  // });
-  const columns = currentBoard?.columns ?? [];
-  // const [activeTaskId, setActiveTaskId] = useState<null | string>(null)
-
-  // const onDragEnd = ({ active, over }: DragEndEvent) => {
-  //   console.log(active, over);
-  //   const sourceColumnId = active.data.current?.sortable.containerId
-  //   const targetColumnId = over?.data.current?.sortable.containerId
-  //   const taskId = active.id
-  //   if (sourceColumnId && targetColumnId) {
-  //     const findSourceColumn = currentBoard?.columns.find(col => col.id === sourceColumnId)
-  //     const findTargetColumn = currentBoard?.columns.find(col => col.id === targetColumnId);
-  //     if (findSourceColumn && findTargetColumn) {
-  //       const task = getTaskById(taskId as string);
-  //       findSourceColumn.tasks = findSourceColumn.tasks.filter(task => task.id !== taskId)
-  //       findTargetColumn.tasks.push(task)
-  //       mutation.mutate({ boardId: currentBoard?.id, taskId, sourceColumnId, targetColumnId })
-  //     }
-  //   }
-
-  // };
-
-  // const [state, handlers] = useListState(columns);
   if (isLoading)
     return (
       <Center mih="100%">
         <Text>Loading...</Text>
       </Center>
     );
-  // const getTaskById = (taskId: string) => {
-  //   return currentBoard?.columns.reduce((foundTask, col) => {
-  //     return foundTask || col.tasks.find(task => task.id === taskId);
-  //   }, null);
-  // };
-
-  // const onDragStart = ({ active }: DragStartEvent) => {
-  //   setActiveTaskId(active.id as string)
-  // }
-  // const task = activeTaskId ? getTaskById(activeTaskId) : null;
 
   return (
     <>
@@ -87,12 +46,12 @@ function Board() {
         type="never"
         styles={{
           root: {
-            maxWidth: "100%", // Restrict to parent container
+            maxWidth: "100%",
             overflowX: "auto",
           },
           viewport: {
-            width: "100%", // Prevent viewport from exceeding container
-            padding: 0, // Remove padding on viewport
+            width: "100%",
+            padding: 0,
           },
         }}
       >
@@ -100,8 +59,7 @@ function Board() {
           styles={{
             inner: {
               display: "flex",
-              flexWrap: "nowrap", // Prevent wrapping
-              // width: 'fit-content',    // Match content size
+              flexWrap: "nowrap",
             },
           }}
           // h="100%"

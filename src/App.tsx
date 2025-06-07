@@ -24,24 +24,12 @@ export default function App() {
         <AppShell.Header style={{ maxWidth: "100%" }}>
           <Header />
         </AppShell.Header>
-        {/* {isTablet ? <Box>
-        <Button leftSection={<IconEye size={16} />} onClick={toggleMobile} hiddenFrom="sm" />
-
-      </Box> : <AppShell.Navbar>
-        <Sidebar />
-      </AppShell.Navbar>} */}
 
         <AppShell.Navbar>
           <Sidebar toggleDesktop={toggleDesktop} toggleMobile={toggleMobile} />
         </AppShell.Navbar>
 
         <AppShell.Main>
-          {/* <Button onClick={toggleDesktop} visibleFrom="sm">
-          Toggle navbar
-        </Button>
-        <Button onClick={toggleMobile} hiddenFrom="sm">
-          Toggle navbar
-        </Button> */}
           <Board />
         </AppShell.Main>
       </AppShell>

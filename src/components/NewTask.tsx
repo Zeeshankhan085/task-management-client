@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useBoardStore } from "../store/board";
 import {
   Stack,
@@ -20,6 +20,15 @@ type NewTaskProps = {
   close: () => void;
 };
 
+const emptyTask = (status: string): Omit<Task, "id"> => {
+  return {
+    title: "",
+    description: "",
+    status,
+    subTasks: [getEmptySubTask()],
+  };
+};
+
 const getEmptySubTask = (): {
   id?: string;
   title: string;
@@ -30,22 +39,15 @@ const getEmptySubTask = (): {
 });
 
 function NewTask({ columnId, task = null, close }: NewTaskProps) {
-  const { currentBoard } = useBoardStore();
+  const { currentBoard, currentBoardId } = useBoardStore();
+  const [processing, setProcessing] = useState(false);
+  const current = currentBoard();
   const queryClient = useQueryClient();
   const [deletedSubTaskIds, setDeletedSubTaskIds] = useState<string[]>([]);
 
-  const [formValue, setFormValue] = useState({
-    title: "",
-    description: "",
-    status: currentBoard?.columns[0]?.name || "",
-    subTasks: [getEmptySubTask()],
-  });
-
-  useEffect(() => {
-    if (task) {
-      setFormValue(task);
-    }
-  }, [task]);
+  const [formValue, setFormValue] = useState(
+    task ? structuredClone(task) : emptyTask(current.columns[0].name ?? ""),
+  );
 
   const updateFormValue = (key: keyof typeof formValue, value: string) => {
     setFormValue((prev) => ({ ...prev, [key]: value }));
@@ -79,6 +81,7 @@ function NewTask({ columnId, task = null, close }: NewTaskProps) {
 
   const onSuccess = () => {
     queryClient.invalidateQueries("boards");
+    setProcessing(false);
     close();
   };
 
@@ -86,23 +89,24 @@ function NewTask({ columnId, task = null, close }: NewTaskProps) {
   const editMutation = useMutation({ mutationFn: editTask, onSuccess });
 
   const onSubmit = () => {
-    if (!formValue.title || !currentBoard?.id) return;
+    if (!formValue.title || !currentBoardId) return;
+    setProcessing(true);
 
     const clonedTask = structuredClone(formValue);
     clonedTask.subTasks = clonedTask.subTasks.filter((s) => s.title.trim());
 
     if (!task) {
-      const newColId = currentBoard.columns.find(
+      const newColId = current.columns.find(
         (col) => col.name === formValue.status,
       ).id;
       createMutation.mutate({
-        boardId: currentBoard.id,
+        boardId: currentBoardId,
         columnId: newColId,
         task: clonedTask,
       });
     } else {
       editMutation.mutate({
-        boardId: currentBoard.id,
+        boardId: currentBoardId,
         columnId,
         taskId: task.id,
         deletedSubTaskIds,
@@ -150,12 +154,12 @@ function NewTask({ columnId, task = null, close }: NewTaskProps) {
 
       <Select
         label="Status"
-        data={currentBoard?.columns.map((col) => col.name) || []}
+        data={current?.columns.map((col) => col.name) || []}
         value={formValue.status}
         onChange={(value) => updateFormValue("status", value!)}
       />
 
-      <Button onClick={onSubmit}>
+      <Button loading={processing} onClick={onSubmit}>
         {task ? "Save Changes" : "Create Task"}
       </Button>
     </Stack>
