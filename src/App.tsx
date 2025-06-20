@@ -34,7 +34,6 @@ export default function App() {
         </AppShell.Main>
       </AppShell>
       <Box pos="absolute" left={0} bottom="200px" hiddenFrom="md">
-        {/* <IconEye /> */}
         <ActionIcon
           w="50px"
           h="25px"
@@ -49,7 +48,6 @@ export default function App() {
         </ActionIcon>
       </Box>
       <Box pos="absolute" left={0} bottom="200px" visibleFrom="md">
-        {/* <IconEye /> */}
         <ActionIcon
           w="50px"
           h="25px"

@@ -25,7 +25,6 @@ const brand: MantineColorsTuple = [
   "#2b2c88",
 ];
 const themeOverride = createTheme({
-  /** Put {your mantine theme override here */
   colors: { brand },
   primaryColor: "brand",
 });

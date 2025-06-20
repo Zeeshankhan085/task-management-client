@@ -1,22 +1,23 @@
 import { useBoardStore } from "../store/board";
-import { Center, Text, Grid, ScrollArea } from "@mantine/core";
-// import { useListState } from '@mantine/hooks';
+import { Center, Grid, ScrollArea, Skeleton } from "@mantine/core";
 import { useQuery } from "react-query";
 import { fetchBoards } from "../api";
 import Column from "./Column";
 import AddNewColumn from "./AddNewColumn";
 import { Board as BoardI } from "./modal";
-// import { DragEndEvent, DragStartEvent, } from '@dnd-kit/core';
+import {useEffect} from 'react';
 
 function Board() {
   const { currentBoard, setCurrentBoardId, setBoards } = useBoardStore();
+  useEffect(() => {
+    console.log('mounted')
+  })
   const current = currentBoard();
   const { isLoading } = useQuery(["boards"], fetchBoards, {
+    staleTime: 1000 * 60 * 5,
     onSuccess: (fetchedBoards: BoardI[]) => {
-      // Set boards in Zustand store
 
       setBoards(fetchedBoards);
-      // Set the first board as current only if it's the initial load
       const current = currentBoard();
       if (!current && fetchedBoards.length > 0) {
         setCurrentBoardId(fetchedBoards[0].id);
@@ -35,7 +36,7 @@ function Board() {
   if (isLoading)
     return (
       <Center mih="100%">
-        <Text>Loading...</Text>
+      <Skeleton></Skeleton>
       </Center>
     );
 
