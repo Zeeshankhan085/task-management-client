@@ -5,18 +5,17 @@ import { fetchBoards } from "../api";
 import Column from "./Column";
 import AddNewColumn from "./AddNewColumn";
 import { Board as BoardI } from "./modal";
-import {useEffect} from 'react';
+import { useEffect } from "react";
 
 function Board() {
   const { currentBoard, setCurrentBoardId, setBoards } = useBoardStore();
   useEffect(() => {
-    console.log('mounted')
-  })
+    console.log("mounted");
+  });
   const current = currentBoard();
   const { isLoading } = useQuery(["boards"], fetchBoards, {
     staleTime: 1000 * 60 * 5,
     onSuccess: (fetchedBoards: BoardI[]) => {
-
       setBoards(fetchedBoards);
       const current = currentBoard();
       if (!current && fetchedBoards.length > 0) {
@@ -36,7 +35,7 @@ function Board() {
   if (isLoading)
     return (
       <Center mih="100%">
-      <Skeleton></Skeleton>
+        <Skeleton></Skeleton>
       </Center>
     );
 

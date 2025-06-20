@@ -20,7 +20,7 @@ export const useBoardStore = create<BoardInterface>()((set, get) => ({
   },
   currentBoard: () => {
     const { boards, currentBoardId } = get();
-    return boards.find((board) => board.id === currentBoardId);
+    return boards?.find((board) => board.id === currentBoardId);
   },
   setCurrentBoardId(id: string) {
     set({ currentBoardId: id });
