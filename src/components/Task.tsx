@@ -43,7 +43,6 @@ function Task({ columnId, task }: { columnId: string; task: ITask }) {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            width: "200px",
           }}
           color="dark"
           onClick={open}

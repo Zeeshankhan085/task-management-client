@@ -110,8 +110,8 @@ function Column({ column }: ColumnProps) {
           overflow: "hidden",
           textOverflow: "ellipsis",
           width: "200px",
-          fontWeight: 500,
-          fontSize: "20px",
+          fontWeight: 400,
+          fontSize: "16px",
         }}
       >
         {column.name}

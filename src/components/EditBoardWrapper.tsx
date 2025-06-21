@@ -40,6 +40,12 @@ function EditBoardWrapper({
       : (structuredClone(current) ?? emptyCurrentBoard()),
   );
   const isEdit = !!formBoard?.id;
+  const onSettled = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setProcessing(false);
+
+    closeModal(false);
+  };
   const deleteColumn = (index: number, columnId: string) => {
     const updatedColumns = formBoard?.columns.filter(
       (_, colIndex) => colIndex !== index,
@@ -60,25 +66,23 @@ function EditBoardWrapper({
         refetchActive: true,
         exact: true,
       });
-      setProcessing(false);
     },
+    onSettled: onSettled,
   });
 
   const newBoardMutation = useMutation({
     mutationFn: addNewBoard,
     onSuccess: (data: Board) => {
       queryClient.invalidateQueries(["boards"]);
-      setProcessing(false);
       setCurrentBoardId(data.id);
     },
+    onSettled: onSettled,
   });
 
   const handleBoardNameChange = (name: string) => {
     setFormBoard({ ...formBoard, name: name });
   };
   const handleInputChange = (index: number, value: string) => {
-    console.log(index, value);
-
     const updatedColumns = formBoard.columns.map((col, colIndex) => {
       return colIndex === index ? { ...col, name: value } : col;
     });
@@ -107,7 +111,6 @@ function EditBoardWrapper({
         columns: formBoard.columns,
       });
     }
-    closeModal(false);
   };
   return (
     <Modal opened={true} onClose={() => closeModal(false)}>

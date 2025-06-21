@@ -8,7 +8,8 @@ import { Board as BoardI } from "./modal";
 import { useEffect } from "react";
 
 function Board() {
-  const { currentBoard, setCurrentBoardId, setBoards } = useBoardStore();
+  const { currentBoard, setCurrentBoardId, setBoards } =
+    useBoardStore();
   useEffect(() => {
     console.log("mounted");
   });
@@ -35,7 +36,7 @@ function Board() {
   if (isLoading)
     return (
       <Center mih="100%">
-        <Skeleton></Skeleton>
+        <Skeleton h={{ base: "600px", md: "400px" }} w="100%"></Skeleton>
       </Center>
     );
 
@@ -62,14 +63,13 @@ function Board() {
               flexWrap: "nowrap",
             },
           }}
-          // h="100%"
         >
           {columns
             .filter((col) => col.name)
             .map((column) => (
               <Grid.Col
                 key={column.id}
-                span={{ base: 4, md: 3, lg: 2 }}
+                span={{ base: 10, sm: 8, md: 3 }}
                 style={{
                   flex: "0 0 auto",
                 }}
