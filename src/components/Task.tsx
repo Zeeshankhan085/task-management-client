@@ -1,12 +1,15 @@
-import { Card, Text, Modal } from "@mantine/core";
+import { Card, Text, Modal, Flex, Stack, Avatar } from "@mantine/core";
 import { Task as ITask } from "./modal";
 import { useDisclosure } from "@mantine/hooks";
 import TaskDetail from "./TaskDetail";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import NewTask from "./NewTask";
+import fakerUtils from "../utils/useFaker";
 
 function Task({ columnId, task }: { columnId: string; task: ITask }) {
+  const { avatar } = fakerUtils();
+
   const [opened, { open, close }] = useDisclosure(false);
   const [newTaskModal, { open: openNewTaskModal, close: closeNewTaskModal }] =
     useDisclosure(false);
@@ -25,32 +28,54 @@ function Task({ columnId, task }: { columnId: string; task: ITask }) {
       onDrop: () => setDragging(false),
     });
   });
+  useEffect(() => {
+    console.log("rerendered", task.id, columnId);
+  });
 
   return (
     <>
       <Card
         ref={ref}
         opacity={dragging ? 0.5 : 1}
-        shadow="sm"
         padding="lg"
         radius="md"
-        style={{ cursor: !dragging ? "grab" : "" }}
         withBorder
+        // shadow={dragging ? "xl" : "xs"}
+        // style={{ cursor: dragging ? "grabbing" : "grab" }}
+        style={{
+          cursor: dragging ? "grabbing" : "grab",
+          "--paper-shadow": dragging
+            ? "var(--mantine-shadow-md)"
+            : "var(--mantine-shadow-xs)",
+        }}
       >
-        <Text
-          style={{
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-          color="dark"
-          onClick={open}
-        >
-          {task.title}
-        </Text>
+        <Stack>
+          <Text
+            component="a"
+            href="#"
+            style={{
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            c="brand.3"
+            onClick={open}
+          >
+            {task.title}
+          </Text>
+          <Flex justify="space-between">
+            <Avatar src={avatar} />
+          </Flex>
+        </Stack>
       </Card>
-      <Modal centered opened={opened} onClose={close} withCloseButton={false}>
+      <Modal
+        centered
+        size="xl"
+        opened={opened}
+        onClose={close}
+        withCloseButton={false}
+      >
         <TaskDetail
           columnId={columnId}
           openNewTaskModal={() => {
@@ -74,4 +99,4 @@ function Task({ columnId, task }: { columnId: string; task: ITask }) {
   );
 }
 
-export default Task;
+export default memo(Task);

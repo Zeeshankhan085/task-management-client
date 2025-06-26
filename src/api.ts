@@ -91,6 +91,22 @@ export const editTask = async ({
     { deletedSubTaskIds, task },
   );
 };
+export const patchEditTask = async ({
+  boardId,
+  columnId,
+  taskId,
+  task,
+}: {
+  boardId: string;
+  columnId: string;
+  taskId: string;
+  task: Partial<Task>;
+}) => {
+  await axiosInstance.patch(
+    `/boards/${boardId}/columns/${columnId}/tasks/${taskId}/`,
+    task,
+  );
+};
 
 export const deleteTask = async ({
   boardId,

@@ -3,13 +3,13 @@ import { Column as IColumn } from "./modal";
 import Task from "./Task";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, memo } from "react";
 import {
   ElementDragType,
   DropTargetEventBasePayload,
 } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { moveTask } from "../api";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { useBoardStore } from "../store/board";
 import { Task as ITask } from "./modal";
 
@@ -19,13 +19,13 @@ interface ColumnProps {
 
 function Column({ column }: ColumnProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const { currentBoard, updateBoard, currentBoardId } = useBoardStore();
   const current = currentBoard();
   const mutation = useMutation({
     mutationFn: moveTask,
     onSuccess: () => {
-      queryClient.invalidateQueries("boards");
+      // queryClient.invalidateQueries("boards");
     },
   });
 
@@ -126,4 +126,4 @@ function Column({ column }: ColumnProps) {
   );
 }
 
-export default Column;
+export default memo(Column);

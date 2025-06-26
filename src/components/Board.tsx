@@ -8,8 +8,7 @@ import { Board as BoardI } from "./modal";
 import { useEffect } from "react";
 
 function Board() {
-  const { currentBoard, setCurrentBoardId, setBoards } =
-    useBoardStore();
+  const { currentBoard, setCurrentBoardId, setBoards } = useBoardStore();
   useEffect(() => {
     console.log("mounted");
   });

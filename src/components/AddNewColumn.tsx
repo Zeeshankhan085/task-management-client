@@ -12,9 +12,9 @@ function AddNewColumn() {
   return (
     <>
       {current && current.columns.filter((col) => col.name).length > 0 ? (
-        <Grid.Col span={{ base: 4, md: 3, xl: 2 }}>
+        <Grid.Col h="100vh" span={{ base: 4, md: 3, xl: 2.4 }}>
           {" "}
-          <Card shadow="sm" padding="lg" radius="md" withBorder h="60%">
+          <Card shadow="sm" padding="lg" radius="md" withBorder h="100%">
             <Center
               onClick={() => setOpened(true)}
               h="100%"
