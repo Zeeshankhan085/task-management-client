@@ -45,7 +45,7 @@ function TaskDetail({
     <>
       <FocusTrap.InitialFocus />
       <Stack>
-        <Group justify="space-between">
+        <Group justify="space-between" wrap="nowrap">
           <Title order={4}>{task.title}</Title>
           <Menu>
             <Menu.Target>
